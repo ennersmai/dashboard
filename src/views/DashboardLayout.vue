@@ -9,7 +9,7 @@
       <Sidebar />
       
       <!-- Page Content -->
-      <main class="content-area" :class="{ 'content-area--collapsed': isCollapsed }">
+      <main class="content-area" :class="contentAreaClasses">
         <RouterView />
       </main>
     </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import Topbar from '@/components/layout/Topbar.vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
@@ -31,7 +31,15 @@ import { useSidebar } from '@/composables/useSidebar'
 const showBottombar = ref(true)
 
 // Use sidebar state for responsive layout
-const { isCollapsed } = useSidebar()
+const { isCollapsed, isHoverExpanded } = useSidebar()
+
+// Computed classes for content area
+const contentAreaClasses = computed(() => ({
+  'content-area--collapsed': isCollapsed.value,
+  'content-area--hover-expanded': isCollapsed.value && isHoverExpanded.value
+}))
+
+
 
 // Computed margin for content area
 const contentMargin = computed(() => {
@@ -64,8 +72,15 @@ const contentMargin = computed(() => {
 
 /* Collapsed sidebar state */
 .content-area--collapsed {
-  margin-left: var(--sidebar-collapsed-width);
+  margin-left: var(--sidebar-collapsed-width) !important;
 }
+
+/* Hover expanded state - content moves to accommodate full-width expanded sidebar */
+.content-area--hover-expanded {
+  margin-left: var(--sidebar-width) !important;
+}
+
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {

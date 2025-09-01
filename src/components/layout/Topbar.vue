@@ -74,7 +74,7 @@ const showProfileDropdown = ref(false)
 const windowWidth = ref(window.innerWidth)
 
 // Use sidebar state to adjust header position
-const { isCollapsed } = useSidebar()
+const { isCollapsed, isHoverExpanded } = useSidebar()
 
 // Update window width on resize
 const updateWindowWidth = () => {
@@ -86,6 +86,12 @@ const topbarLeftPosition = computed(() => {
   // On mobile, topbar should be full width
   if (windowWidth.value <= 768) return '0'
   
+  // If collapsed and hover expanded, use full width
+  if (isCollapsed.value && isHoverExpanded.value) {
+    return 'var(--sidebar-width)'
+  }
+  
+  // Otherwise use normal logic
   return isCollapsed.value ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)'
 })
 
@@ -126,7 +132,7 @@ document.addEventListener('click', (e) => {
   border-bottom: 1px solid var(--topbar-border);
   z-index: 1000;
   box-shadow: var(--shadow-sm);
-  transition: left var(--transition-normal);
+  transition: left 0.2s ease-in-out;
 }
 
 .topbar-content {

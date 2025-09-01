@@ -215,13 +215,36 @@ onMounted(() => {
   display: block !important;
 }
 
-.sidebar--collapsed.sidebar--hover-expanded .section-header {
+.sidebar--collapsed.sidebar--hover-expanded :deep(.section-header) {
   display: block !important;
 }
 
-/* Hide section headers when collapsed and not hovered */
-.sidebar--collapsed:not(.sidebar--hover-expanded) .section-header {
+/* Hide text, badges, arrows when collapsed and not hovered */
+.sidebar--collapsed:not(.sidebar--hover-expanded) .menu-text,
+.sidebar--collapsed:not(.sidebar--hover-expanded) .menu-badge,
+.sidebar--collapsed:not(.sidebar--hover-expanded) .menu-arrow {
   display: none !important;
+}
+
+.sidebar--collapsed:not(.sidebar--hover-expanded) .submenu {
+  display: none !important;
+}
+
+/* Show section headers when collapsed with smaller text */
+.sidebar--collapsed:not(.sidebar--hover-expanded) :deep(.section-header) {
+  display: block !important;
+  padding: var(--spacing-xs) var(--spacing-sm) !important;
+}
+
+.sidebar--collapsed:not(.sidebar--hover-expanded) :deep(.section-title) {
+  font-size: calc(var(--font-size-xs) * 0.6) !important;
+  letter-spacing: 0.01em !important;
+  text-align: center !important;
+  transform: translateX(0) !important;
+  transition: all 0.2s ease-in-out !important;
+  max-width: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar--collapsed.sidebar--hover-expanded .menu-link,
@@ -237,6 +260,20 @@ onMounted(() => {
 /* Show sidebar brand when hover-expanded */
 .sidebar--collapsed.sidebar--hover-expanded .sidebar-brand {
   display: block !important;
+}
+
+/* Make section titles bigger and transition left in icon menu hover state */
+.sidebar--collapsed.sidebar--hover-expanded :deep(.section-title) {
+  font-size: var(--font-size-xs) !important;
+  letter-spacing: 0.03em !important;
+  max-width: 120px;
+  transform: translateX(-8px) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+/* Also ensure section headers are positioned correctly */
+.sidebar--collapsed.sidebar--hover-expanded :deep(.section-header) {
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-xs) !important;
 }
 
 @keyframes slideInRight {
@@ -298,13 +335,17 @@ onMounted(() => {
 .sidebar--collapsed:not(.sidebar--hover-expanded) .menu-link,
 .sidebar--collapsed:not(.sidebar--hover-expanded) .menu-button {
   justify-content: center !important;
-  padding: var(--spacing-md) !important;
+  padding: var(--spacing-sm) var(--spacing-sm) !important;
   border: none !important;
   background-color: transparent !important;
-  margin: 0 !important;
+  margin: 2px var(--spacing-xs) !important;
+  display: flex !important;
+  align-items: center !important;
+  min-height: 44px !important;
 }
 
 .sidebar--collapsed:not(.sidebar--hover-expanded) .menu-icon {
   margin-right: 0 !important;
+  margin-left: 0 !important;
 }
 </style>

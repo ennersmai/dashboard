@@ -6,6 +6,7 @@ export type SidebarStyle = 'style1' | 'style2'
 const isCollapsed = ref(false)
 const sidebarStyle = ref<SidebarStyle>('style1')
 const showFlyout = ref(false)
+const isHoverExpanded = ref(false)
 
 export function useSidebar() {
   // Toggle sidebar collapsed state
@@ -25,11 +26,13 @@ export function useSidebar() {
   const showSidebarFlyout = () => {
     if (isCollapsed.value) {
       showFlyout.value = true
+      isHoverExpanded.value = true
     }
   }
 
   const hideSidebarFlyout = () => {
     showFlyout.value = false
+    isHoverExpanded.value = false
   }
 
   // Computed sidebar classes
@@ -53,6 +56,7 @@ export function useSidebar() {
     isCollapsed,
     sidebarStyle,
     showFlyout,
+    isHoverExpanded,
     
     // Computed
     sidebarClasses,

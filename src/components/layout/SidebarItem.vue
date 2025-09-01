@@ -148,6 +148,11 @@ if (hasActiveChild.value) {
   opacity: 0.7;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s ease-in-out;
+  transform: translateX(0);
 }
 
 .menu-item {
