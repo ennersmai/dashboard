@@ -9,7 +9,7 @@ export const menuData: MenuItem[] = [
   },
   {
     id: 'components-section',
-    title: 'COMPONENTS',
+    title: 'COMPS',
     icon: '',
     isSection: true
   },

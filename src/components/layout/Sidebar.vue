@@ -9,12 +9,26 @@
       <!-- Sidebar Header -->
       <div class="sidebar-header">
         <div class="sidebar-brand">
-          <h3 v-if="!isCollapsed || showFlyout">Admin Dashboard</h3>
-          <h3 v-else class="brand-collapsed">AD</h3>
+          <div v-if="!isCollapsed || showFlyout" class="brand-expanded">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" class="brand-icon">
+              <path d="M12,2L2,7L12,12L22,7L12,2M2,17L12,22L22,17L12,12L2,17Z"/>
+            </svg>
+            <span class="brand-text">Dashboard</span>
+          </div>
+          <div v-else class="brand-collapsed">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="brand-icon">
+              <path d="M12,2L2,7L12,12L22,7L12,2M2,17L12,22L22,17L12,12L2,17Z"/>
+            </svg>
+          </div>
         </div>
         <button class="sidebar-toggle" @click="toggleSidebar">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <!-- Hamburger menu when expanded -->
+          <svg v-if="!isCollapsed" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="toggle-icon">
             <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+          </svg>
+          <!-- Three dots when collapsed -->
+          <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="toggle-icon">
+            <path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
           </svg>
         </button>
       </div>
@@ -114,17 +128,29 @@ onMounted(() => {
   flex: 1;
 }
 
-.sidebar-brand h3 {
+.brand-expanded {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.brand-collapsed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-icon {
+  color: white;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.brand-text {
   color: white;
   margin: 0;
   font-size: var(--font-size-lg);
   font-weight: 700;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.brand-collapsed {
-  font-size: var(--font-size-xl);
-  text-align: center;
 }
 
 .sidebar-toggle {
@@ -140,6 +166,10 @@ onMounted(() => {
 .sidebar-toggle:hover {
   color: white;
   background-color: rgba(255, 255, 255, 0.15);
+}
+
+.toggle-icon {
+  transition: all var(--transition-fast);
 }
 
 .sidebar-nav {
@@ -262,5 +292,19 @@ onMounted(() => {
 /* Hide scrollbar for collapsed sidebar */
 .sidebar--collapsed .sidebar-nav {
   overflow-x: visible;
+}
+
+/* Collapsed state: Remove borders and center icons */
+.sidebar--collapsed:not(.sidebar--hover-expanded) .menu-link,
+.sidebar--collapsed:not(.sidebar--hover-expanded) .menu-button {
+  justify-content: center !important;
+  padding: var(--spacing-md) !important;
+  border: none !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+}
+
+.sidebar--collapsed:not(.sidebar--hover-expanded) .menu-icon {
+  margin-right: 0 !important;
 }
 </style>

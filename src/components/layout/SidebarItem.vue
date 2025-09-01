@@ -180,11 +180,35 @@ if (hasActiveChild.value) {
 .menu-link--active {
   color: var(--sidebar-active-text);
   background-color: var(--sidebar-active-bg);
+  position: relative;
+}
+
+.menu-link--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--primary-color);
+  border-radius: 0 2px 2px 0;
 }
 
 .menu-item--has-active-child > .menu-button {
   color: var(--sidebar-text-hover);
   background-color: rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.menu-item--has-active-child > .menu-button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: rgba(59, 130, 246, 0.6);
+  border-radius: 0 2px 2px 0;
 }
 
 .menu-icon {
@@ -203,6 +227,8 @@ if (hasActiveChild.value) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0; /* Allow flex item to shrink */
+  max-width: 160px; /* Set explicit max-width for ellipsis */
 }
 
 .menu-badge {
@@ -230,7 +256,7 @@ if (hasActiveChild.value) {
 .submenu {
   max-height: 0;
   overflow: hidden;
-  transition: max-height var(--transition-normal);
+  transition: max-height 0.2s ease-in-out;
   background-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -283,12 +309,36 @@ if (hasActiveChild.value) {
   background-color: var(--sidebar-active-bg);
   border-color: var(--primary-color);
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  position: relative;
+}
+
+.menu-item--style2 .menu-link--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--primary-color);
+  border-radius: 0 2px 2px 0;
 }
 
 .menu-item--style2 .menu-item--has-active-child > .menu-button {
   color: var(--sidebar-text-hover);
   background-color: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
+  position: relative;
+}
+
+.menu-item--style2 .menu-item--has-active-child > .menu-button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: rgba(59, 130, 246, 0.6);
+  border-radius: 0 2px 2px 0;
 }
 
 /* Style 2 submenu styling */

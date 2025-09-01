@@ -9,13 +9,13 @@
       <Sidebar />
       
       <!-- Page Content -->
-      <main class="content-area">
+      <main class="content-area" :class="{ 'content-area--collapsed': isCollapsed }">
         <RouterView />
       </main>
     </div>
     
-    <!-- Bottom Bar (Optional) -->
-    <Bottombar v-if="showBottombar" />
+    <!-- Bottom Bar -->
+    <Bottombar />
   </div>
 </template>
 
@@ -59,7 +59,12 @@ const contentMargin = computed(() => {
   padding: var(--spacing-lg);
   background-color: var(--bg-secondary);
   min-height: calc(100vh - var(--topbar-height));
-  transition: margin-left var(--transition-normal);
+  transition: margin-left 0.2s ease-in-out;
+}
+
+/* Collapsed sidebar state */
+.content-area--collapsed {
+  margin-left: var(--sidebar-collapsed-width);
 }
 
 /* Responsive adjustments */

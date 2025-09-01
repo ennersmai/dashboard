@@ -25,6 +25,8 @@
   border-top: 1px solid var(--border-light);
   padding: var(--spacing-md) 0;
   margin-top: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .bottombar-content {
