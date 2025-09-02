@@ -22,14 +22,12 @@
           </div>
         </div>
         <button class="sidebar-toggle" @click="toggleSidebar">
-          <!-- Hamburger menu when expanded -->
-          <svg v-if="!isCollapsed" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="toggle-icon">
-            <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
-          </svg>
-          <!-- Three dots when collapsed -->
-          <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="toggle-icon">
-            <path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
-          </svg>
+          <!-- Dynamic hamburger menu with animated bars -->
+          <div class="hamburger-icon" :class="{ 'hamburger-icon--collapsed': isCollapsed }">
+            <span class="hamburger-bar hamburger-bar--top"></span>
+            <span class="hamburger-bar hamburger-bar--middle"></span>
+            <span class="hamburger-bar hamburger-bar--bottom"></span>
+          </div>
         </button>
       </div>
       
@@ -170,6 +168,45 @@ onMounted(() => {
 
 .toggle-icon {
   transition: all var(--transition-fast);
+}
+
+/* Hamburger Icon Styles */
+.hamburger-icon {
+  width: 20px;
+  height: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  margin-left: 6px; /* Move sandwich 6px to the right */
+}
+
+.hamburger-bar {
+  height: 2px;
+  background-color: currentColor;
+  border-radius: 1px;
+  transition: all 0.2s ease-in-out;
+  transform-origin: center;
+}
+
+/* When expanded - equal lengths */
+.hamburger-bar--top,
+.hamburger-bar--middle,
+.hamburger-bar--bottom {
+  width: 100%; /* All bars same length when expanded */
+}
+
+/* When collapsed - different lengths */
+.hamburger-icon--collapsed .hamburger-bar--top {
+  width: 70%; /* Shorter top bar */
+}
+
+.hamburger-icon--collapsed .hamburger-bar--middle {
+  width: 100%; /* Full length middle bar */
+}
+
+.hamburger-icon--collapsed .hamburger-bar--bottom {
+  width: 85%; /* Medium length bottom bar */
 }
 
 .sidebar-nav {
