@@ -1,6 +1,21 @@
 <template>
-  <div class="login-container">
-    <div class="login-card">
+  <div class="login-page">
+    <!-- Top Bar -->
+    <div class="login-topbar">
+      <div class="topbar-content">
+        <div class="company-info">
+          <span class="company-name">Admin Dashboard</span>
+          <span class="version">v2.0.1</span>
+        </div>
+        <div class="system-info">
+          <span class="status-indicator"></span>
+          <span>System Online</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-container">
+      <div class="login-card">
       <div class="login-header">
         <h1>Admin Dashboard</h1>
         <p>Sign in to your account</p>
@@ -32,11 +47,23 @@
         </div>
         
         <div class="form-group">
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.rememberMe">
-            <span class="checkmark"></span>
-            Remember me
-          </label>
+          <div class="remember-row">
+            <label class="checkbox-label">
+              <input type="checkbox" v-model="form.rememberMe">
+              <span class="checkmark"></span>
+              Remember me
+            </label>
+            <button 
+              type="button" 
+              class="qr-toggle-btn" 
+              @click="toggleQRPanel"
+              title="Show QR Code for Mobile Login"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm15 0h3v3h-3v-3zm0 5h3v3h-3v-3zm-5-5h3v3h-3v-3zm0 5h3v3h-3v-3z"/>
+              </svg>
+            </button>
+          </div>
         </div>
         
         <button type="submit" class="btn btn-primary btn-login" :disabled="isLoading">
@@ -45,25 +72,36 @@
         </button>
       </form>
       
-      <div class="login-divider">
-        <span>OR</span>
+      <div class="login-footer">
+        <a href="#" class="forgot-password">Forgot your password?</a>
+      </div>
+    </div>
+    </div>
+
+    <!-- QR Code Side Panel -->
+    <div class="qr-panel" :class="{ 'qr-panel--open': showQRPanel }">
+      <div class="qr-panel-header">
+        <h3>Mobile Login</h3>
+        <button class="close-btn" @click="toggleQRPanel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
       </div>
       
-      <div class="qr-section">
-        <h3>Mobile Login</h3>
-        <div class="qr-container">
-          <div class="qr-code">
-            <canvas ref="qrCanvas" width="150" height="150"></canvas>
-          </div>
-          <div class="qr-info">
-            <p><strong>Scan QR Code</strong></p>
-            <small>Use your mobile app to scan this QR code for quick login</small>
-            <div class="qr-status">
-              <span class="status-indicator active"></span>
-              <span class="status-text">Ready to scan</span>
-            </div>
+      <div class="qr-content">
+        <div class="qr-code">
+          <canvas ref="qrCanvas" width="180" height="180"></canvas>
+        </div>
+        <div class="qr-info">
+          <p><strong>Scan to Login</strong></p>
+          <small>Use your mobile app to scan this QR code for instant access</small>
+          <div class="qr-status">
+            <span class="status-dot active"></span>
+            <span class="status-text">Ready to scan</span>
           </div>
         </div>
+        
         <div class="mobile-features">
           <div class="feature-item">
             <span class="feature-icon">📱</span>
@@ -71,17 +109,29 @@
           </div>
           <div class="feature-item">
             <span class="feature-icon">🔒</span>
-            <span>Secure Login</span>
+            <span>Secure</span>
           </div>
           <div class="feature-item">
             <span class="feature-icon">⚡</span>
-            <span>Instant Access</span>
+            <span>Instant</span>
           </div>
         </div>
       </div>
-      
-      <div class="login-footer">
-        <a href="#" class="forgot-password">Forgot your password?</a>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="login-bottombar">
+      <div class="bottombar-content">
+        <div class="company-details">
+          <span>&copy; 2025 Admin Dashboard Inc.</span>
+          <span class="separator">•</span>
+          <span>All rights reserved</span>
+        </div>
+        <div class="build-info">
+          <span>Build: 2024.01.15</span>
+          <span class="separator">•</span>
+          <span>Environment: Production</span>
+        </div>
       </div>
     </div>
   </div>
@@ -94,12 +144,17 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const isLoading = ref(false)
 const qrCanvas = ref<HTMLCanvasElement>()
+const showQRPanel = ref(false)
 
 const form = reactive({
   email: '',
   password: '',
   rememberMe: false
 })
+
+const toggleQRPanel = () => {
+  showQRPanel.value = !showQRPanel.value
+}
 
 const handleLogin = async () => {
   isLoading.value = true
@@ -117,7 +172,7 @@ const generateQRCode = () => {
   
   const canvas = qrCanvas.value
   const ctx = canvas.getContext('2d')!
-  const size = 150
+  const size = 180
   const cellSize = size / 21 // 21x21 QR code grid
   
   // Clear canvas
@@ -166,22 +221,92 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.login-container {
+.login-page {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top Bar Styles */
+.login-topbar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: var(--spacing-sm) 0;
+  position: relative;
+  z-index: 100;
+}
+
+.topbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.company-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.company-name {
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  color: var(--primary-color);
+}
+
+.version {
+  background: var(--primary-color);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+}
+
+.system-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+/* Main Container */
+.login-container {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
   padding: var(--spacing-lg);
+  position: relative;
 }
 
 .login-card {
-  background-color: var(--bg-primary);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   padding: var(--spacing-2xl);
   width: 100%;
-  max-width: 480px;
+  max-width: 420px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 10;
 }
 
 .login-header {
@@ -234,6 +359,13 @@ onMounted(() => {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+/* Remember Me Row */
+.remember-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .checkbox-label {
   display: flex;
   align-items: center;
@@ -246,6 +378,24 @@ onMounted(() => {
   margin-right: var(--spacing-sm);
 }
 
+.qr-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-toggle-btn:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary-hover);
+}
+
 .btn-login {
   width: 100%;
   padding: var(--spacing-md);
@@ -254,87 +404,92 @@ onMounted(() => {
   margin-bottom: var(--spacing-lg);
 }
 
-.login-divider {
-  text-align: center;
-  margin: var(--spacing-xl) 0;
-  position: relative;
+/* QR Code Side Panel */
+.qr-panel {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 380px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  box-shadow: -10px 0 25px -5px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.login-divider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
+.qr-panel--open {
   right: 0;
-  height: 1px;
-  background-color: var(--border-light);
 }
 
-.login-divider span {
-  background-color: var(--bg-primary);
-  color: var(--text-muted);
-  padding: 0 var(--spacing-md);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+.qr-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.qr-section {
-  margin-bottom: var(--spacing-xl);
-}
-
-.qr-section h3 {
-  color: var(--text-color);
-  font-size: 1.125rem;
-  margin-bottom: var(--spacing-lg);
-  text-align: center;
+.qr-panel-header h3 {
+  margin: 0;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
-.qr-container {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-lg);
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.close-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-primary);
+}
+
+.qr-content {
   padding: var(--spacing-lg);
-  background: var(--bg-color-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  margin-bottom: var(--spacing-lg);
+  text-align: center;
 }
 
 .qr-code {
-  flex-shrink: 0;
-  padding: var(--spacing-sm);
+  display: inline-block;
+  padding: var(--spacing-md);
   background: white;
-  border-radius: var(--border-radius-sm);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.qr-info {
-  flex: 1;
-  text-align: left;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: var(--spacing-lg);
 }
 
 .qr-info p {
-  color: var(--text-color);
+  color: var(--text-primary);
   margin-bottom: var(--spacing-sm);
-  font-size: 1rem;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
 }
 
 .qr-info small {
-  color: var(--text-color-secondary);
-  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
   display: block;
-  margin-bottom: var(--spacing-md);
-  line-height: 1.4;
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.5;
 }
 
 .qr-status {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
 }
 
-.status-indicator {
+.status-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -343,19 +498,14 @@ onMounted(() => {
 }
 
 .status-text {
-  font-size: 0.875rem;
-  color: var(--text-color-secondary);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
 .mobile-features {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
 }
 
@@ -364,11 +514,10 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-xs);
-  padding: var(--spacing-sm);
-  background: var(--bg-color-secondary);
+  padding: var(--spacing-md);
+  background: rgba(59, 130, 246, 0.05);
   border-radius: var(--border-radius);
-  flex: 1;
-  text-align: center;
+  border: 1px solid rgba(59, 130, 246, 0.1);
 }
 
 .feature-icon {
@@ -376,9 +525,14 @@ onMounted(() => {
 }
 
 .feature-item span:last-child {
-  font-size: 0.75rem;
-  color: var(--text-color-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
   font-weight: 500;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .login-footer {
@@ -398,6 +552,38 @@ onMounted(() => {
   text-decoration: underline;
 }
 
+/* Bottom Bar Styles */
+.login-bottombar {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding: var(--spacing-sm) 0;
+  position: relative;
+  z-index: 100;
+}
+
+.bottombar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.company-details,
+.build-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.separator {
+  opacity: 0.5;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .login-container {
@@ -406,23 +592,38 @@ onMounted(() => {
   
   .login-card {
     padding: var(--spacing-xl);
+    max-width: 100%;
   }
   
   .login-header h1 {
     font-size: var(--font-size-2xl);
   }
   
-  .qr-container {
+  .topbar-content,
+  .bottombar-content {
     flex-direction: column;
+    gap: var(--spacing-sm);
     text-align: center;
   }
   
-  .qr-info {
-    text-align: center;
+  .company-details,
+  .build-info {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .qr-panel {
+    width: 100%;
+    right: -100%;
   }
   
   .mobile-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .remember-row {
     flex-direction: column;
+    align-items: flex-start;
     gap: var(--spacing-sm);
   }
 }
