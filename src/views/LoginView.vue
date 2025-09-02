@@ -311,7 +311,7 @@ onMounted(() => {
 
 .login-header {
   text-align: center;
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: var(--spacing-xl);
 }
 
 .login-header h1 {
@@ -328,7 +328,7 @@ onMounted(() => {
 }
 
 .login-form {
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-lg);
 }
 
 .form-group {
@@ -404,31 +404,35 @@ onMounted(() => {
   margin-bottom: var(--spacing-lg);
 }
 
-/* QR Code Side Panel */
+/* QR Code Side Panel - Natural height like login card */
 .qr-panel {
-  position: fixed;
-  top: 0;
-  right: -400px;
-  width: 380px;
-  height: 100vh;
-  background: rgba(255, 255, 255, 0.98);
+  position: absolute;
+  top: 50%;
+  right: -440px;
+  width: 100%;
+  max-width: 420px;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  box-shadow: -10px 0 25px -5px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s ease-in-out;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: right 0.4s ease-in-out;
   z-index: 1000;
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  /* Exact same padding as login card */
+  padding: var(--spacing-2xl);
+  translate: 0 2px;
 }
 
 .qr-panel--open {
-  right: 0;
+  right: calc(50% - 180px - 420px - var(--spacing-md) - 15px);
 }
 
 .qr-panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-lg);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: var(--spacing-lg);
 }
 
 .qr-panel-header h3 {
@@ -453,17 +457,16 @@ onMounted(() => {
 }
 
 .qr-content {
-  padding: var(--spacing-lg);
   text-align: center;
 }
 
 .qr-code {
   display: inline-block;
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
   background: white;
   border-radius: var(--border-radius);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
 
 .qr-info p {
@@ -477,8 +480,8 @@ onMounted(() => {
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
   display: block;
-  margin-bottom: var(--spacing-lg);
-  line-height: 1.5;
+  margin-bottom: var(--spacing-sm);
+  line-height: 2;
 }
 
 .qr-status {
@@ -486,7 +489,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-lg);
 }
 
 .status-dot {
@@ -507,6 +510,7 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-md);
+  margin-bottom: 7px;
 }
 
 .feature-item {
@@ -613,8 +617,17 @@ onMounted(() => {
   }
   
   .qr-panel {
-    width: 100%;
+    position: fixed;
+    top: 0;
+    width: 90%;
+    max-width: 380px;
     right: -100%;
+    height: 100vh;
+    transform: none;
+  }
+  
+  .qr-panel--open {
+    right: 5%;
   }
   
   .mobile-features {
