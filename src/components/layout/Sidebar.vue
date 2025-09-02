@@ -190,23 +190,26 @@ onMounted(() => {
 }
 
 /* When expanded - equal lengths */
+/* When collapsed (released) - all bars equal length */
 .hamburger-bar--top,
 .hamburger-bar--middle,
 .hamburger-bar--bottom {
-  width: 100%; /* All bars same length when expanded */
+  width: 100%; /* All bars same length when collapsed/released */
 }
 
-/* When collapsed - different lengths */
-.hamburger-icon--collapsed .hamburger-bar--top {
+/* When expanded (locked) - different lengths with right alignment */
+.hamburger-icon:not(.hamburger-icon--collapsed) .hamburger-bar--top {
   width: 70%; /* Shorter top bar */
+  margin-left: auto; /* Right align */
 }
 
-.hamburger-icon--collapsed .hamburger-bar--middle {
+.hamburger-icon:not(.hamburger-icon--collapsed) .hamburger-bar--middle {
   width: 100%; /* Full length middle bar */
 }
 
-.hamburger-icon--collapsed .hamburger-bar--bottom {
+.hamburger-icon:not(.hamburger-icon--collapsed) .hamburger-bar--bottom {
   width: 85%; /* Medium length bottom bar */
+  margin-left: auto; /* Right align */
 }
 
 .sidebar-nav {
