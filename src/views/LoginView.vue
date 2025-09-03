@@ -655,8 +655,9 @@ onMounted(() => {
   }
   
   .remember-row {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-sm);
   }
 }
