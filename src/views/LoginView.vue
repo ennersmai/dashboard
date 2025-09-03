@@ -710,13 +710,25 @@ const qrPanelInlineStyle = computed(() => {
   }
   
   .qr-panel--open {
-    max-height: 600px; /* enough for content */
+    max-height: 660px; /* allow extra space for bottom padding */
     opacity: 1;
     padding: var(--spacing-xl); /* match login card padding */
+    padding-bottom: calc(var(--spacing-xl) + 25px); /* extra space at bottom inside card */
   }
   
   .mobile-features {
     grid-template-columns: 1fr;
+    margin-bottom: 15px; /* extra space after 'Instant' label inside the card */
+  }
+  /* Ensure visible bottom breathing room inside the card */
+  .qr-content::after {
+    content: "";
+    display: block;
+    height: 15px;
+  }
+  /* Extra bottom padding inside the QR card on mobile */
+  .qr-content {
+    padding-bottom: 15px;
   }
   
   .remember-row {
