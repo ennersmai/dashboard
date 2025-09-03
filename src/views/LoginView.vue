@@ -453,6 +453,7 @@ const qrPanelInlineStyle = computed(() => {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.3);
   padding: var(--spacing-2xl);
+  box-sizing: border-box;
   width: 0;
   overflow: hidden;
   opacity: 0;
