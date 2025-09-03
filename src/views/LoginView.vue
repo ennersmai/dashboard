@@ -15,7 +15,8 @@
     </div>
 
     <div class="login-container">
-      <div class="login-card">
+      <div class="login-grid" :class="{ 'qr-open': showQRPanel }">
+        <div class="login-card" ref="loginCardEl">
       <div class="login-header">
         <h1>Admin Dashboard</h1>
         <p>Sign in to your account</p>
@@ -75,47 +76,47 @@
       <div class="login-footer">
         <a href="#" class="forgot-password">Forgot your password?</a>
       </div>
-    </div>
-    </div>
-
-    <!-- QR Code Side Panel -->
-    <div class="qr-panel" :class="{ 'qr-panel--open': showQRPanel }">
-      <div class="qr-panel-header">
-        <h3>Mobile Login</h3>
-        <button class="close-btn" @click="toggleQRPanel">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-          </svg>
-        </button>
-      </div>
-      
-      <div class="qr-content">
-        <div class="qr-code">
-          <canvas ref="qrCanvas" width="180" height="180"></canvas>
         </div>
-        <div class="qr-info">
-          <p><strong>Scan to Login</strong></p>
-          <small>Use your mobile app to scan this QR code for instant access</small>
-          <div class="qr-status">
-            <span class="status-dot active"></span>
-            <span class="status-text">Ready to scan</span>
+        <!-- QR Code Side Panel inside grid -->
+        <aside class="qr-panel" :class="{ 'qr-panel--open': showQRPanel }" :style="qrPanelInlineStyle">
+          <div class="qr-panel-header">
+            <h3>Mobile Login</h3>
+            <button class="close-btn" @click="toggleQRPanel">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
+            </button>
           </div>
-        </div>
-        
-        <div class="mobile-features">
-          <div class="feature-item">
-            <span class="feature-icon">📱</span>
-            <span>Mobile App</span>
+          
+          <div class="qr-content">
+            <div class="qr-code">
+              <canvas ref="qrCanvas" width="180" height="180"></canvas>
+            </div>
+            <div class="qr-info">
+              <p><strong>Scan to Login</strong></p>
+              <small>Use your mobile app to scan this QR code for instant access</small>
+              <div class="qr-status">
+                <span class="status-dot active"></span>
+                <span class="status-text">Ready to scan</span>
+              </div>
+            </div>
+            
+            <div class="mobile-features">
+              <div class="feature-item">
+                <span class="feature-icon">📱</span>
+                <span>Mobile App</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">🔒</span>
+                <span>Secure</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">⚡</span>
+                <span>Instant</span>
+              </div>
+            </div>
           </div>
-          <div class="feature-item">
-            <span class="feature-icon">🔒</span>
-            <span>Secure</span>
-          </div>
-          <div class="feature-item">
-            <span class="feature-icon">⚡</span>
-            <span>Instant</span>
-          </div>
-        </div>
+        </aside>
       </div>
     </div>
 
@@ -138,13 +139,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const isLoading = ref(false)
 const qrCanvas = ref<HTMLCanvasElement>()
 const showQRPanel = ref(false)
+const loginCardEl = ref<HTMLElement | null>(null)
+const qrPanelHeight = ref<number>(0)
+let resizeObserver: ResizeObserver | null = null
 
 const form = reactive({
   email: '',
@@ -154,6 +158,9 @@ const form = reactive({
 
 const toggleQRPanel = () => {
   showQRPanel.value = !showQRPanel.value
+  if (showQRPanel.value) {
+    nextTick(() => generateQRCode())
+  }
 }
 
 const handleLogin = async () => {
@@ -217,6 +224,30 @@ const generateQRCode = () => {
 
 onMounted(() => {
   generateQRCode()
+  if (loginCardEl.value && 'ResizeObserver' in window) {
+    const updateHeight = () => {
+      if (loginCardEl.value) {
+        qrPanelHeight.value = Math.ceil(loginCardEl.value.getBoundingClientRect().height)
+      }
+    }
+    updateHeight()
+    resizeObserver = new ResizeObserver(() => updateHeight())
+    resizeObserver.observe(loginCardEl.value)
+  }
+})
+
+onUnmounted(() => {
+  if (resizeObserver && loginCardEl.value) {
+    resizeObserver.unobserve(loginCardEl.value)
+  }
+  resizeObserver = null
+})
+
+const qrPanelInlineStyle = computed(() => {
+  // Only apply on desktop; mobile uses max-height accordion
+  return window.innerWidth >= 769
+    ? { height: showQRPanel.value ? `${qrPanelHeight.value}px` : '0px' }
+    : {}
 })
 </script>
 
@@ -404,29 +435,57 @@ onMounted(() => {
   margin-bottom: var(--spacing-lg);
 }
 
-/* QR Code Side Panel - Hidden behind login card, slides to right */
+/* Desktop two-panel layout: equal heights */
+.login-grid {
+  display: flex;
+  align-items: flex-start; /* prevent stretch during animation */
+  gap: var(--spacing-lg);
+  max-width: calc(420px + var(--spacing-lg) + 420px);
+}
+
+.login-card {
+  width: 420px;
+  max-width: none;
+}
+
 .qr-panel {
-  position: absolute;
-  top: 50%;
-  left: 37.5%;
-  width: 100%;
-  max-width: 420px;
-  transform: translateY(-50%); /* Start exactly behind login card */
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: var(--border-radius-lg);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: transform 0.4s ease-in-out;
-  z-index: 5; /* Behind login card initially */
-  /* Exact same padding as login card */
   padding: var(--spacing-2xl);
-  translate: 0 2px;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: width 0.4s ease, padding 0.4s ease, opacity 0.25s ease, transform 0.4s ease, border-width 0.4s ease, height 0.4s ease;
 }
 
-.qr-panel--open {
-  transform: translateY(-50%) translateX(calc(100% + var(--spacing-lg) - 23px)); /* Slide to right with 10px less */
-  z-index: 15; /* In front when open */
+.login-grid.qr-open .qr-panel {
+  width: 420px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Desktop: collapse QR panel without affecting row height */
+@media (min-width: 769px) {
+  .qr-panel {
+    width: 0;
+    padding: 0;
+    border-width: 0;
+    pointer-events: none;
+    overflow: hidden;
+    height: 0;
+    visibility: hidden;
+  }
+  .login-grid.qr-open .qr-panel {
+    width: 420px;
+    padding: var(--spacing-2xl);
+    border-width: 1px;
+    pointer-events: auto;
+    visibility: visible;
+  }
 }
 
 /* Mobile: compact styles for QR content */
@@ -601,6 +660,11 @@ onMounted(() => {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .login-grid {
+    display: block;
+    max-width: 100%;
+  }
+  
   .login-container {
     padding: var(--spacing-md);
   }
