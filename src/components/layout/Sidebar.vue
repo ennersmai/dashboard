@@ -355,12 +355,16 @@ onMounted(() => {
   .sidebar {
     transform: translateX(-100%);
     transition: transform var(--transition-normal);
+    width: var(--sidebar-width);
   }
-  
+  /* When user taps the mobile topbar button, we toggle collapsed=false to slide it in */
   .sidebar:not(.sidebar--collapsed) {
     transform: translateX(0);
   }
-  
+  /* Ensure hover-expansion does not affect mobile */
+  .sidebar--hover-expanded {
+    width: var(--sidebar-width) !important;
+  }
   .sidebar-flyout {
     display: none;
   }
@@ -387,5 +391,19 @@ onMounted(() => {
 .sidebar--collapsed:not(.sidebar--hover-expanded) .menu-icon {
   margin-right: 0 !important;
   margin-left: 0 !important;
+}
+
+/* Mobile: when collapsed, ensure icons are centered and no overflow */
+@media (max-width: 768px) {
+  .sidebar--collapsed {
+    width: var(--sidebar-collapsed-width);
+  }
+  .sidebar--collapsed .sidebar-nav {
+    overflow-x: hidden;
+  }
+  .sidebar--collapsed:not(.sidebar--hover-expanded) .menu-link,
+  .sidebar--collapsed:not(.sidebar--hover-expanded) .menu-button {
+    width: 100%;
+  }
 }
 </style>

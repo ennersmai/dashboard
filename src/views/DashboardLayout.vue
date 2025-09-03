@@ -59,6 +59,7 @@ const contentMargin = computed(() => {
   display: flex;
   flex: 1;
   margin-top: var(--topbar-height);
+  overflow-x: hidden;
 }
 
 .content-area {
@@ -68,6 +69,8 @@ const contentMargin = computed(() => {
   background-color: var(--bg-secondary);
   min-height: calc(100vh - var(--topbar-height));
   transition: margin-left 0.2s ease-in-out;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Collapsed sidebar state */
@@ -85,8 +88,10 @@ const contentMargin = computed(() => {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .content-area {
-    margin-left: 0;
+    margin-left: 0 !important;
     padding: var(--spacing-md);
+    width: 100%;
+    max-width: 100vw;
   }
 }
 </style>

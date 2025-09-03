@@ -3,6 +3,12 @@
     <div class="topbar-content">
       <!-- Left section - Search -->
       <div class="topbar-left">
+        <!-- Mobile menu toggle -->
+        <button class="mobile-menu-btn" @click="toggleSidebar" aria-label="Toggle menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+          </svg>
+        </button>
         <!-- Search placeholder -->
         <div class="search-container">
           <input 
@@ -74,7 +80,7 @@ const showProfileDropdown = ref(false)
 const windowWidth = ref(window.innerWidth)
 
 // Use sidebar state to adjust header position
-const { isCollapsed, isHoverExpanded } = useSidebar()
+const { isCollapsed, isHoverExpanded, toggleSidebar } = useSidebar()
 
 // Update window width on resize
 const updateWindowWidth = () => {
@@ -83,16 +89,9 @@ const updateWindowWidth = () => {
 
 // Computed style for dynamic left positioning
 const topbarLeftPosition = computed(() => {
-  // On mobile, topbar should be full width
-  if (windowWidth.value <= 768) return '0'
-  
-  // If collapsed and hover expanded, use full width
-  if (isCollapsed.value && isHoverExpanded.value) {
-    return 'var(--sidebar-width)'
-  }
-  
-  // Otherwise use normal logic
-  return isCollapsed.value ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)'
+  if (windowWidth.value <= 768) return '0';
+  if (isCollapsed.value && isHoverExpanded.value) return 'var(--sidebar-width)';
+  return isCollapsed.value ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)';
 })
 
 // Lifecycle hooks for resize listener
@@ -146,6 +145,22 @@ document.addEventListener('click', (e) => {
 .topbar-left {
   display: flex;
   align-items: center;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  color: var(--text-secondary);
+  margin-right: var(--spacing-md);
+}
+
+.mobile-menu-btn:hover {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .search-container {
@@ -279,6 +294,11 @@ document.addEventListener('click', (e) => {
 @media (max-width: 768px) {
   .search-container {
     display: none;
+  }
+  .mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .user-name {
