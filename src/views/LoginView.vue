@@ -459,7 +459,7 @@ const qrPanelInlineStyle = computed(() => {
   opacity: 0;
   position: absolute;
   top: 0;
-  left: 100%;
+  left: calc(100% + 1px); /* 1px gap from login card */
   transition: width 0.4s ease, padding 0.4s ease, opacity 0.25s ease, transform 0.4s ease, border-width 0.4s ease, height 0.4s ease;
 }
 
@@ -705,7 +705,7 @@ const qrPanelInlineStyle = computed(() => {
     opacity: 0;
     box-sizing: border-box;
     transition: max-height 0.5s ease, opacity 0.35s ease, padding 0.35s ease; /* smoother, visible */
-    margin: 0 0 10px; /* match login card width */
+    margin: 1px 0 10px; /* 1px gap below login card */
     padding: 0 var(--spacing-xl); /* match login card horizontal padding */
   }
   
