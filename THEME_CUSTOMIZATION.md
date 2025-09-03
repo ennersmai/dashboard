@@ -1,4 +1,4 @@
-# 🎨 Theme Customization Guide
+ s# 🎨 Theme Customization Guide
 
 ## 📁 Primary CSS File Location
 

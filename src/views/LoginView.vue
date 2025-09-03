@@ -404,28 +404,39 @@ onMounted(() => {
   margin-bottom: var(--spacing-lg);
 }
 
-/* QR Code Side Panel - Natural height like login card */
+/* QR Code Side Panel - Hidden behind login card, slides to right */
 .qr-panel {
   position: absolute;
   top: 50%;
-  right: -440px;
+  left: 37.5%;
   width: 100%;
   max-width: 420px;
-  transform: translateY(-50%);
+  transform: translateY(-50%); /* Start exactly behind login card */
   background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: var(--border-radius-lg);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: right 0.4s ease-in-out;
-  z-index: 1000;
+  transition: transform 0.4s ease-in-out;
+  z-index: 5; /* Behind login card initially */
   /* Exact same padding as login card */
   padding: var(--spacing-2xl);
   translate: 0 2px;
 }
 
 .qr-panel--open {
-  right: calc(50% - 180px - 420px - var(--spacing-md) - 15px);
+  transform: translateY(-50%) translateX(calc(100% + var(--spacing-lg) - 23px)); /* Slide to right with 10px less */
+  z-index: 15; /* In front when open */
+}
+
+/* Mobile: compact styles for QR content */
+@media (max-width: 768px) {
+  .qr-panel .qr-panel-header { margin-bottom: var(--spacing-xs); }
+  .qr-panel .qr-panel-header h3 { font-size: var(--font-size-md); }
+  .qr-panel .qr-code { margin-bottom: var(--spacing-xs); padding: var(--spacing-xs); }
+  .qr-panel .qr-code canvas { width: 100px !important; height: 100px !important; }
+  .qr-panel .qr-info p { font-size: var(--font-size-sm); margin-bottom: 4px; font-weight: 500; }
+  .qr-panel .qr-info small { font-size: var(--font-size-xs); line-height: 1.2; }
 }
 
 .qr-panel-header {
@@ -617,17 +628,26 @@ onMounted(() => {
   }
   
   .qr-panel {
-    position: fixed;
-    top: 0;
-    width: 90%;
-    max-width: 380px;
-    right: -100%;
-    height: 100vh;
+    position: static; /* in-flow below login */
+    left: auto;
+    right: auto;
+    top: auto;
+    width: auto;
+    max-width: none;
     transform: none;
+    overflow: hidden;
+    max-height: 0; /* collapsed */
+    opacity: 0;
+    box-sizing: border-box;
+    transition: max-height 0.5s ease, opacity 0.35s ease, padding 0.35s ease; /* smoother, visible */
+    margin: 0 15px 10px; /* symmetric sides, bottom 15px less */
+    padding: 0 var(--spacing-sm); /* collapsed vertical padding */
   }
   
   .qr-panel--open {
-    right: 5%;
+    max-height: 600px; /* enough for content */
+    opacity: 1;
+    padding: var(--spacing-sm); /* restore padding to show content */
   }
   
   .mobile-features {
