@@ -437,10 +437,8 @@ const qrPanelInlineStyle = computed(() => {
 
 /* Desktop two-panel layout: equal heights */
 .login-grid {
-  display: flex;
-  align-items: flex-start; /* prevent stretch during animation */
-  gap: var(--spacing-lg);
-  max-width: calc(420px + var(--spacing-lg) + 420px);
+  position: relative;
+  width: 420px;
 }
 
 .login-card {
@@ -458,7 +456,9 @@ const qrPanelInlineStyle = computed(() => {
   width: 0;
   overflow: hidden;
   opacity: 0;
-  transform: translateX(-8px);
+  position: absolute;
+  top: 0;
+  left: 100%;
   transition: width 0.4s ease, padding 0.4s ease, opacity 0.25s ease, transform 0.4s ease, border-width 0.4s ease, height 0.4s ease;
 }
 
@@ -696,22 +696,22 @@ const qrPanelInlineStyle = computed(() => {
     left: auto;
     right: auto;
     top: auto;
-    width: auto;
-    max-width: none;
+    width: 100%;
+    max-width: 100%;
     transform: none;
     overflow: hidden;
     max-height: 0; /* collapsed */
     opacity: 0;
     box-sizing: border-box;
     transition: max-height 0.5s ease, opacity 0.35s ease, padding 0.35s ease; /* smoother, visible */
-    margin: 0 15px 10px; /* symmetric sides, bottom 15px less */
-    padding: 0 var(--spacing-sm); /* collapsed vertical padding */
+    margin: 0 0 10px; /* match login card width */
+    padding: 0 var(--spacing-xl); /* match login card horizontal padding */
   }
   
   .qr-panel--open {
     max-height: 600px; /* enough for content */
     opacity: 1;
-    padding: var(--spacing-sm); /* restore padding to show content */
+    padding: var(--spacing-xl); /* match login card padding */
   }
   
   .mobile-features {
